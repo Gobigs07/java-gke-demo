@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-gke-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: java-gke
+  template:
+    metadata:
+      labels:
+        app: java-gke
+    spec:
+      containers:
+      - name: app
+        image: your-dockerhub-user/java-gke-demo:latest
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: app-config
+        - secretRef:
+            name: app-secret
