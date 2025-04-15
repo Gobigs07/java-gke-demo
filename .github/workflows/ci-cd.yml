@@ -25,13 +25,17 @@ jobs:
     - name: Build with Maven
       run: mvn clean package -DskipTests
 
+    # Debug Step: List files in the target directory
+    - name: List files in target directory
+      run: ls -l target/
+
     # Step 4: Authenticate with Google Cloud using the service account key
     - name: Authenticate with Google Cloud
       uses: google-github-actions/auth@v1
       with:
         credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
-    # Step 5: Configure Docker to use Google Artifact Registry
+    # Step 5: Configure Docker for Artifact Registry
     - name: Configure Docker for Artifact Registry
       run: gcloud auth configure-docker ${{ secrets.GAR_ZONE }}-docker.pkg.dev
 
