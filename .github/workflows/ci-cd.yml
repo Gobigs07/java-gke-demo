@@ -25,7 +25,7 @@ jobs:
     - name: Build with Maven
       run: mvn clean package -DskipTests
 
-    # Step 4: Authenticate with Google Cloud
+    # Step 4: Authenticate with Google Cloud using the service account key
     - name: Authenticate with Google Cloud
       uses: google-github-actions/auth@v1
       with:
