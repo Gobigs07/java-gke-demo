@@ -16,4 +16,4 @@ This is a simple Java Spring Boot application that demonstrates:
 
 ```bash
 mvn clean package
-docker build -t your-dockerhub-user/java-gke-demo .
+docker build -t Gobigs07/java-gke-demo .
