@@ -69,4 +69,6 @@ jobs:
 
     # Step 10: Deploy to GKE using kubectl
     - name: Deploy to GKE
+      env:
+        USE_GKE_GCLOUD_AUTH_PLUGIN: "False"
       run: kubectl apply -f k8s/
