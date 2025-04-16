@@ -33,7 +33,7 @@ jobs:
     - name: Authenticate with Google Cloud
       uses: google-github-actions/auth@v1
       with:
-        credentials_json: '${{ secrets.GCP_SA_KEY }}'
+        credentials_json: '${{ secrets.GKE_SA_KEY }}'
 
     # Step 5: Configure Docker for Artifact Registry
     - name: Configure Docker for Artifact Registry
@@ -52,7 +52,7 @@ jobs:
       uses: google-github-actions/setup-gcloud@v1
       with:
         project_id: ${{ secrets.GCP_PROJECT }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        service_account_key: ${{ secrets.GKE_SA_KEY }}
         export_default_credentials: true
 
     # Step 9: Get GKE credentials to interact with the cluster
