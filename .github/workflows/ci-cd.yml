@@ -39,6 +39,14 @@ jobs:
     - name: Configure Docker for Artifact Registry
       run: gcloud auth configure-docker ${{ secrets.GAR_ZONE }}-docker.pkg.dev
 
+    - name: Ensure JAR file exists
+      run: |
+        ls -lh target/
+        if ! ls target/*.jar; then
+          echo "ERROR: No JAR file found in target/. Maven build may have failed."
+          exit 1
+        fi
+
     # Step 6: Build Docker image
     - name: Docker build
       run: docker build -t ${{ secrets.GAR_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GAR_REPO }}/${{ secrets.IMAGE }}:${{ secrets.IMAGE_TAG }} .
