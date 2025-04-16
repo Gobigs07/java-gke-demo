@@ -23,11 +23,20 @@ jobs:
 
     # Step 3: Build with Maven (repackage = executable Spring Boot JAR)
     - name: Build with Maven
-      run: mvn clean package spring-boot:repackage -DskipTests -X
+      run: mvn clean package spring-boot:repackage -DskipTests
 
-    # Debug Step: List files in the target directory
+    # Debug Step: List files in target directory
     - name: List files in target directory
       run: ls -l target/
+
+    # Ensure JAR file exists
+    - name: Ensure JAR file exists
+      run: |
+        ls -lh target/
+        if ! ls target/*.jar; then
+          echo "ERROR: No JAR file found in target/. Maven build may have failed."
+          exit 1
+        fi
 
     # Step 4: Authenticate with Google Cloud using the service account key
     - name: Authenticate with Google Cloud
@@ -39,24 +48,15 @@ jobs:
     - name: Configure Docker for Artifact Registry
       run: gcloud auth configure-docker ${{ secrets.GAR_ZONE }}-docker.pkg.dev
 
-    # Step 6: Ensure JAR file exists
-    - name: Ensure JAR file exists
-      run: |
-        ls -lh target/
-        if ! ls target/*.jar; then
-          echo "ERROR: No JAR file found in target/. Maven build may have failed."
-          exit 1
-        fi
-
-    # Step 7: Build Docker image
+    # Step 6: Build Docker image
     - name: Docker build
       run: docker build -t ${{ secrets.GAR_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GAR_REPO }}/${{ secrets.IMAGE }}:${{ secrets.IMAGE_TAG }} .
 
-    # Step 8: Push Docker image to Google Artifact Registry
+    # Step 7: Push Docker image to Google Artifact Registry
     - name: Push image
       run: docker push ${{ secrets.GAR_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GAR_REPO }}/${{ secrets.IMAGE }}:${{ secrets.IMAGE_TAG }}
 
-    # Step 9: Set up gcloud CLI for GKE deployment
+    # Step 8: Set up gcloud CLI for GKE deployment
     - name: Setup gcloud
       uses: google-github-actions/setup-gcloud@v1
       with:
@@ -64,17 +64,10 @@ jobs:
         service_account_key: ${{ secrets.GKE_SA_KEY }}
         export_default_credentials: true
 
-    # Step 10: Set GKE plugin installation
-    - name: Set GKE plugin installation
-      run: |
-        curl -sSL https://storage.googleapis.com/cloud-sdk-release/gke-gcloud-auth-plugin-linux-amd64.tar.gz | tar -xz
-        sudo mv gke-gcloud-auth-plugin /usr/local/bin/
-        chmod +x /usr/local/bin/gke-gcloud-auth-plugin
-
-    # Step 11: Get GKE credentials
+    # Step 9: Get GKE credentials
     - name: Get GKE credentials
       run: gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }} --zone ${{ secrets.GKE_ZONE }}
 
-    # Step 12: Deploy to GKE
+    # Step 10: Deploy to GKE using kubectl
     - name: Deploy to GKE
       run: kubectl apply -f k8s/
