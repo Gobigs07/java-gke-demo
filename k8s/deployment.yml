@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: image: europe-central2-docker.pkg.dev/splendid-map-423700-r8/obiwan/micro:test
+        image: us-east1-docker.pkg.dev/splendid-map-423700-r8/obiwan/micro:test
         ports:
         - containerPort: 8080
         envFrom:
