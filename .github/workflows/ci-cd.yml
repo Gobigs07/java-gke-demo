@@ -64,12 +64,13 @@ jobs:
         service_account_key: ${{ secrets.GKE_SA_KEY }}
         export_default_credentials: true
 
-     - name: Install gke-gcloud-auth-plugin
-       run: |
-         curl -Lo gke-gcloud-auth-plugin.tar.gz https://github.com/google-gke/gke-gcloud-auth-plugin/releases/download/v0.4.0/gke-gcloud-auth-plugin-linux-amd64.tar.gz
-         tar -xzf gke-gcloud-auth-plugin.tar.gz
-         sudo mv gke-gcloud-auth-plugin /usr/local/bin/
-         gke-gcloud-auth-plugin version
+    # Install gke-gcloud-auth-plugin
+    - name: Install gke-gcloud-auth-plugin
+      run: |
+        curl -Lo gke-gcloud-auth-plugin.tar.gz https://github.com/google-gke/gke-gcloud-auth-plugin/releases/download/v0.4.0/gke-gcloud-auth-plugin-linux-amd64.tar.gz
+        tar -xzf gke-gcloud-auth-plugin.tar.gz
+        sudo mv gke-gcloud-auth-plugin /usr/local/bin/
+        gke-gcloud-auth-plugin version
 
     # Step 9: Get GKE credentials
     - name: Get GKE credentials
